@@ -1,8 +1,8 @@
-name: 'Update Version'
-description: 'Automatically update version in package.json or Cargo.toml based on GitHub release tag'
+name: 'gh-release-manager'
+description: 'Automatically update version file based on GitHub release tag'
 inputs:
   lang:
-    description: 'Language of the project (js or rust)'
+    description: 'Language of the project (e.g. rust, js, etc.)'
     required: true
 runs:
   using: 'docker'
