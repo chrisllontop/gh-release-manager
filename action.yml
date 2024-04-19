@@ -1,0 +1,9 @@
+name: 'Update Version'
+description: 'Automatically update version in package.json or Cargo.toml based on GitHub release tag'
+inputs:
+  lang:
+    description: 'Language of the project (js or rust)'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
