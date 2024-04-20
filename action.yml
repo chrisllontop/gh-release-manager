@@ -1,4 +1,4 @@
-name: 'gh-release-manager'
+name: 'GH Release Manager'
 description: 'Automatically update version file based on GitHub release tag'
 inputs:
   lang:
