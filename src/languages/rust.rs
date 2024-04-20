@@ -2,9 +2,10 @@ use std::fs;
 use anyhow::Error;
 use regex::Regex;
 
-pub fn update_version(version: String) {
+pub fn update_version(version: String) -> Result<(), Error>{
     update_cargo(&version)?;
     update_cargo_lock(&version)?;
+    Ok(())
 }
 
 fn get_project_name() -> Result<String, Error> {
