@@ -1,29 +1,42 @@
-name: Release
+name: Build and Publish image
 
 on:
   release:
-    types:
-      - created
+    types: [created]
 
 jobs:
-  release:
+  build-and-push:
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Setup Rust
-        uses: actions-rs/toolchain@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to GitHub Packages Docker Registry
+        uses: docker/login-action@v1
         with:
-          toolchain: stable
-          override: true
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build
-        uses: actions-rs/cargo@v1
+      - name: Extract version from tags
+        id: tag_version
+        run: |
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          MAJOR_VERSION=$(echo $RELEASE_VERSION | cut -d '.' -f 1)
+          echo "MAJOR_VERSION=v$MAJOR_VERSION" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
         with:
-          command: build
-          args: --release
+          context: .
+          push: true
+          tags: |
+            ghcr.io/chrisllontop/gh-release-manager:${{ env.RELEASE_VERSION }}
+            ghcr.io/chrisllontop/gh-release-manager:${{ env.MAJOR_VERSION }}
 
-      - name: Release
-        uses: softprops/action-gh-release@v2
+      - name: Output image tags
+        run: |
+          echo "Docker images with tags ${RELEASE_VERSION} and ${MAJOR_VERSION} have been pushed to GitHub Packages."
