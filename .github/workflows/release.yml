@@ -46,7 +46,3 @@ jobs:
           tags: |
             ghcr.io/chrisllontop/gh-release-manager:${{ env.RELEASE_VERSION }}
             ghcr.io/chrisllontop/gh-release-manager:${{ env.MAJOR_VERSION }}
-
-      - name: Output image tags
-        run: |
-          echo "Docker images with tags ${RELEASE_VERSION} and ${MAJOR_VERSION} have been pushed to GitHub Packages."
