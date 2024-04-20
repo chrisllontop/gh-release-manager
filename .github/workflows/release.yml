@@ -36,17 +36,45 @@ jobs:
           MAJOR_VERSION=$(echo $RELEASE_VERSION | cut -d '.' -f 1)
           echo "MAJOR_VERSION=$MAJOR_VERSION" >> $GITHUB_ENV
 
+      - name: Configure Git
+        run: |
+          git config user.name "Christian Llontop"
+          git config user.email "chrisllontop@icloud.com"
+
+      - name: Create or update tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const MAJOR_VERSION = process.env.MAJOR_VERSION;
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+
+            octokit.git.createRef({
+              ...github.context.repo,
+              ref: `refs/tags/${MAJOR_VERSION}`,
+              sha: github.context.sha,
+            }).catch(error => {
+              if (error.status === 422 && error.message.includes('Reference already exists')) {
+                // if tag already exists, update it
+                return octokit.git.updateRef({
+                  ...github.context.repo,
+                  ref: `tags/${MAJOR_VERSION}`,
+                  sha: github.context.sha,
+                });
+              } else {
+                // re-throw the error if it's not the error we expected
+                throw error;
+              }
+            });
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_COMMITTER_NAME: Christian Llontop
+          GIT_COMMITTER_EMAIL: chrisllontop@icloud.com
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tag_with_ref: false
-          tag_with_sha: false
           tags: |
             ghcr.io/chrisllontop/gh-release-manager:${{ env.RELEASE_VERSION }}
             ghcr.io/chrisllontop/gh-release-manager:${{ env.MAJOR_VERSION }}
-
-      - name: Output image tags
-        run: |
-          echo "Docker images with tags ${RELEASE_VERSION} and ${MAJOR_VERSION} have been pushed to GitHub Packages."
