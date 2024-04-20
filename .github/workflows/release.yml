@@ -41,8 +41,6 @@ jobs:
         with:
           context: .
           push: true
-          tag_with_ref: false
-          tag_with_sha: false
           tags: |
             ghcr.io/chrisllontop/gh-release-manager:${{ env.RELEASE_VERSION }}
             ghcr.io/chrisllontop/gh-release-manager:${{ env.MAJOR_VERSION }}
