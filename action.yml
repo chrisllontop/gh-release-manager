@@ -6,6 +6,6 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://ghcr.io/chrisllontop/gh-release-manager:${{ inputs.version }}'
   env:
     INPUT_LANG: ${{ inputs.lang }}
