@@ -2,8 +2,10 @@ name: 'gh-release-manager'
 description: 'Automatically update version file based on GitHub release tag'
 inputs:
   lang:
-    description: 'Language of the project (e.g. rust, js, etc.)'
+    description: 'Language of the project (e.g., rust, js, etc.)'
     required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  env:
+    INPUT_LANG: ${{ inputs.lang }}

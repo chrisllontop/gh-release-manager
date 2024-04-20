@@ -1,12 +1,16 @@
-# Use an official Rust image
-FROM rust:slim
+# Usar una imagen base oficial de Rust
+FROM rust:latest
 
-# Copy the source code into the container
+# Crear un directorio de trabajo
 WORKDIR /usr/src/myapp
+
+# Copiar tu código fuente
 COPY . .
 
-# Compile the Rust application
+# Compilar tu aplicación
 RUN cargo build --release
 
-# Run the binary
-ENTRYPOINT ["./target/release/gh_release_manager"]
+RUN ls -la
+
+# Ejecutar tu aplicación
+CMD ["/usr/src/myapp/target/release/gh_release_manager"]
