@@ -1,5 +1,8 @@
 name: 'GH Release Manager'
 description: 'Automatically update version file based on GitHub release tag'
+branding:
+    icon: 'at-sign'
+    color: 'blue'
 inputs:
   lang:
     description: 'Language of the project (e.g., rust, js, etc.)'
