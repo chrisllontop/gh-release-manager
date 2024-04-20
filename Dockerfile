@@ -1,5 +1,5 @@
 # Use an official Rust image
-FROM rust:1.58-slim
+FROM rust:slim
 
 # Copy the source code into the container
 WORKDIR /usr/src/myapp
